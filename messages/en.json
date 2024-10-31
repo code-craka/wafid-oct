@@ -1,0 +1,20 @@
+{
+  "common": {
+    "home": "Home",
+    "bookAppointment": "Book Appointment",
+    "medicalCenters": "Medical Centers",
+    "faq": "FAQ",
+    "faqs": "FAQs",
+    "contact": "Contact",
+    "login": "Login",
+    "register": "Register",
+    "medical_booking": "Medical Booking",
+    "book_appointment": "Book Appointment",
+    "medical_centers": "Medical Centers",
+    "sign_in": "Sign In"
+  },
+  "home": {
+    "title": "Welcome to Wafid",
+    "subtitle": "Book your medical examination appointment for GCC countries"
+  }
+}

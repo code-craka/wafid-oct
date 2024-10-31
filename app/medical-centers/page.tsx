@@ -1,24 +1,17 @@
-import { Suspense } from 'react';
-import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
-import { MedicalCentersList } from './_components/MedicalCentersList';
-import { SearchFilters } from './_components/SearchFilters';
+// app/medical-centers/page.tsx
+import { Metadata } from 'next'
+import MedicalCenterSearch from './_components/MedicalCenterSearch'
 
-export default function MedicalCentersPage() {
+export const metadata: Metadata = {
+  title: 'Medical Centers | Wafid',
+  description: 'Search for accredited medical centers for your GCC medical examination',
+}
+
+export default function MedicalCenters() {
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Medical Centers</h1>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <aside className="lg:col-span-1">
-          <SearchFilters />
-        </aside>
-        
-        <main className="lg:col-span-3">
-          <Suspense fallback={<LoadingSpinner />}>
-            <MedicalCentersList />
-          </Suspense>
-        </main>
-      </div>
+      <h1 className="text-3xl font-bold mb-6">Medical Centers</h1>
+      <MedicalCenterSearch />
     </div>
-  );
-} 
+  )
+}

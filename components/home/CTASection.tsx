@@ -1,3 +1,4 @@
+// components/home/CTASection.tsx
 import { Button } from '@/components/ui/button'
 
 export default function CTASection() {
