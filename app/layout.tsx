@@ -1,27 +1,22 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { Providers } from "./providers";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
+import { Inter } from 'next/font/google'
+import './globals.css'
+import { Providers } from './providers'
+import Header from '@/components/layout/Header'
+import Footer from '@/components/layout/Footer'
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] })
 
-export const metadata: Metadata = {
-  title: "Wafid - Medical Examination Booking",
-  description: "Book your medical examination appointment for GCC countries",
-};
+export const metadata = {
+  title: 'Wafid | وافد',
+  description: 'Wafid is a program under the umbrella of the Gulf Health Council that enables individuals bound to work or reside in the GCC to book their medical check-up appointments.',
+}
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body className={inter.className}>
         <Providers>
-          <div className="min-h-screen flex flex-col">
+          <div className="flex flex-col min-h-screen">
             <Header />
             <main className="flex-grow">{children}</main>
             <Footer />
@@ -29,5 +24,5 @@ export default function RootLayout({
         </Providers>
       </body>
     </html>
-  );
+  )
 }

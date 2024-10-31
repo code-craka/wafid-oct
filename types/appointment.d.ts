@@ -22,4 +22,29 @@ export interface AppointmentSlot {
   isAvailable: boolean;
   medicalCenterId: string;
   doctorId?: string;
+}
+
+export interface PersonalInfo {
+  name: string;
+  email: string;
+  phone: string;
+  passportNumber: string;
+}
+
+export interface LocationSelectorProps {
+  value: string;
+  onChange: (location: string) => void;
+  onBack: () => void;
+}
+
+export interface MedicalCenterSelectorProps {
+  location: string;
+  value: string;
+  onChange: (center: string) => void;
+  onBack: () => void;
+}
+
+export interface PersonalInfoFormProps {
+  value: PersonalInfo;
+  onChange: (info: PersonalInfo) => void;
 } 

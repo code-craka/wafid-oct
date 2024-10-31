@@ -6,6 +6,32 @@ import { LocationSelector } from './LocationSelector';
 import { MedicalCenterSelector } from './MedicalCenterSelector';
 import { Button } from '@/components/ui/button';
 
+// Add these interfaces at the top of the file
+interface PersonalInfo {
+  name: string;
+  email: string;
+  phone: string;
+  passportNumber: string;
+}
+
+interface LocationSelectorProps {
+  value: string;
+  onChange: (location: string) => void;
+  onBack: () => void;
+}
+
+interface MedicalCenterSelectorProps {
+  location: string;
+  value: string;
+  onChange: (center: string) => void;
+  onBack: () => void;
+}
+
+interface PersonalInfoFormProps {
+  value: PersonalInfo;
+  onChange: (info: PersonalInfo) => void;
+}
+
 type Step = 'personal' | 'location' | 'center' | 'confirmation';
 
 export function AppointmentForm() {
