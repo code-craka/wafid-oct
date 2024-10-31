@@ -1,29 +1,57 @@
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { NextResponse } from 'next/server'
+import { PrismaClient } from '@prisma/client'
 
-export async function GET(request: Request) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const country = searchParams.get('country');
-    const specialty = searchParams.get('specialty');
+const prisma = new PrismaClient()
 
-    const centers = await prisma.medicalCenter.findMany({
-      where: {
-        ...(country && { country }),
-        ...(specialty && { specialties: { has: specialty } }),
-      },
-      include: {
-        accreditations: true,
-        availableSlots: true,
-      },
-    });
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url)
+  const id = searchParams.get('id')
 
-    return NextResponse.json(centers);
-  } catch (error) {
-    console.error('Error fetching medical centers:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch medical centers' },
-      { status: 500 }
-    );
+  if (id) {
+    const medicalCenter = await prisma.medicalCenter.findUnique({
+      where: { id },
+    })
+    return NextResponse.json(medicalCenter)
+  } else {
+    const medicalCenters = await prisma.medicalCenter.findMany()
+    return NextResponse.json(medicalCenters)
   }
-} 
+}
+
+export async function POST(req: Request) {
+  const body = await req.json()
+  const medicalCenter = await prisma.medicalCenter.create({
+    data: body,
+  })
+  return NextResponse.json(medicalCenter)
+}
+
+export async function PUT(req: Request) {
+  const { searchParams } = new URL(req.url)
+  const id = searchParams.get('id')
+  const body = await req.json()
+
+  if (!id) {
+    return NextResponse.json({ error: 'Missing ID' }, { status: 400 })
+  }
+
+  const updatedMedicalCenter = await prisma.medicalCenter.update({
+    where: { id },
+    data: body,
+  })
+  return NextResponse.json(updatedMedicalCenter)
+}
+
+export async function DELETE(req: Request) {
+  const { searchParams } = new URL(req.url)
+  const id = searchParams.get('id')
+
+  if (!id) {
+    return NextResponse.json({ error: 'Missing ID' }, { status: 400 })
+  }
+
+  await prisma.medicalCenter.delete({
+    where: { id },
+  })
+  return NextResponse.json({ message: 'Medical center deleted successfully' })
+}

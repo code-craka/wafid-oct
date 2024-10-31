@@ -1,136 +1,182 @@
-'use client';
+// app/book-appointment/_components/AppointmentForm.tsx
+'use client'
 
-import { useState } from 'react';
-import { PersonalInfoForm } from './PersonalInfoForm';
-import { LocationSelector } from './LocationSelector';
-import { MedicalCenterSelector } from './MedicalCenterSelector';
-import { Button } from '@/components/ui/button';
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
+import { Button } from '@/components/ui/button'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import DatePicker from '@/components/ui/date-picker'
 
-// Add these interfaces at the top of the file
-interface PersonalInfo {
-  name: string;
-  email: string;
-  phone: string;
-  passportNumber: string;
-}
+const formSchema = z.object({
+  firstName: z.string().min(2, 'First name must be at least 2 characters'),
+  lastName: z.string().min(2, 'Last name must be at least 2 characters'),
+  email: z.string().email('Invalid email address'),
+  phone: z.string().min(10, 'Phone number must be at least 10 digits'),
+  nationality: z.string().min(2, 'Please select your nationality'),
+  appointmentDate: z.date({
+    required_error: 'Please select a date',
+    invalid_type_error: 'That\'s not a valid date!',
+  }),
+  medicalCenter: z.string().min(2, 'Please select a medical center'),
+})
 
-interface LocationSelectorProps {
-  value: string;
-  onChange: (location: string) => void;
-  onBack: () => void;
-}
-
-interface MedicalCenterSelectorProps {
-  location: string;
-  value: string;
-  onChange: (center: string) => void;
-  onBack: () => void;
-}
-
-interface PersonalInfoFormProps {
-  value: PersonalInfo;
-  onChange: (info: PersonalInfo) => void;
-}
-
-type Step = 'personal' | 'location' | 'center' | 'confirmation';
-
-export function AppointmentForm() {
-  const [step, setStep] = useState<Step>('personal');
-  const [formData, setFormData] = useState({
-    personalInfo: {
-      name: '',
+export default function AppointmentForm() {
+  const [step, setStep] = useState(1)
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      firstName: '',
+      lastName: '',
       email: '',
       phone: '',
-      passportNumber: '',
+      nationality: '',
+      appointmentDate: new Date(),
+      medicalCenter: '',
     },
-    location: '',
-    center: '',
-  });
+  })
 
-  const renderStep = () => {
-    switch (step) {
-      case 'personal':
-        return (
-          <PersonalInfoForm
-            value={formData.personalInfo}
-            onChange={(personalInfo) => {
-              setFormData({ ...formData, personalInfo });
-              setStep('location');
-            }}
-          />
-        );
-      case 'location':
-        return (
-          <LocationSelector
-            value={formData.location}
-            onChange={(location) => {
-              setFormData({ ...formData, location });
-              setStep('center');
-            }}
-            onBack={() => setStep('personal')}
-          />
-        );
-      case 'center':
-        return (
-          <MedicalCenterSelector
-            location={formData.location}
-            value={formData.center}
-            onChange={(center) => {
-              setFormData({ ...formData, center });
-              setStep('confirmation');
-            }}
-            onBack={() => setStep('location')}
-          />
-        );
-      case 'confirmation':
-        return (
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Confirm Your Appointment</h3>
-            {/* Add confirmation details */}
-            <Button onClick={() => console.log('Booking confirmed', formData)}>
-              Confirm Booking
-            </Button>
-          </div>
-        );
-    }
-  };
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    console.log(values)
+    // Here you would typically send the form data to your API
+    // await fetch('/api/appointments', { method: 'POST', body: JSON.stringify(values) })
+  }
+
+  const nextStep = () => setStep(step + 1)
+  const prevStep = () => setStep(step - 1)
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="mb-8">
-        <Steps currentStep={step} />
-      </div>
-      {renderStep()}
-    </div>
-  );
-}
-
-function Steps({ currentStep }: { currentStep: Step }) {
-  const steps = [
-    { id: 'personal', label: 'Personal Info' },
-    { id: 'location', label: 'Location' },
-    { id: 'center', label: 'Medical Center' },
-    { id: 'confirmation', label: 'Confirmation' },
-  ];
-
-  return (
-    <div className="flex justify-between">
-      {steps.map((step, index) => (
-        <div
-          key={step.id}
-          className={`flex-1 text-center ${
-            step.id === currentStep ? 'text-blue-600' : 'text-gray-400'
-          }`}
-        >
-          <div className="relative">
-            <div className="h-2 bg-gray-200 absolute left-0 right-0 top-4 -z-10" />
-            <div className="h-8 w-8 rounded-full bg-white border-2 mx-auto mb-2 flex items-center justify-center">
-              {index + 1}
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        {step === 1 && (
+          <>
+            <FormField
+              control={form.control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>First Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="John" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Doe" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="john.doe@example.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone Number</FormLabel>
+                  <FormControl>
+                    <Input placeholder="+1234567890" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="button" onClick={nextStep}>Next</Button>
+          </>
+        )}
+        {step === 2 && (
+          <>
+            <FormField
+              control={form.control}
+              name="nationality"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nationality</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select your nationality" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="us">United States</SelectItem>
+                      <SelectItem value="uk">United Kingdom</SelectItem>
+                      <SelectItem value="ca">Canada</SelectItem>
+                      {/* Add more countries as needed */}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="appointmentDate"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Appointment Date</FormLabel>
+                  <DatePicker
+                    date={field.value}
+                    setDate={field.onChange}
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="medicalCenter"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Medical Center</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a medical center" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="center1">Medical Center 1</SelectItem>
+                      <SelectItem value="center2">Medical Center 2</SelectItem>
+                      <SelectItem value="center3">Medical Center 3</SelectItem>
+                      {/* Add more medical centers as needed */}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="flex justify-between">
+              <Button type="button" onClick={prevStep}>Previous</Button>
+              <Button type="submit">Submit</Button>
             </div>
-          </div>
-          <span className="text-sm">{step.label}</span>
-        </div>
-      ))}
-    </div>
-  );
-} 
+          </>
+        )}
+      </form>
+    </Form>
+  )
+}

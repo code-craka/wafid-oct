@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
-import { SearchResults } from './_components/SearchResults';
-import { SearchForm } from './_components/SearchForm';
+import SearchResults from './_components/SearchResults';
+import SearchForm from './_components/SearchForm';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 
 export default function SearchPage() {

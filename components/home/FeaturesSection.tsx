@@ -1,3 +1,4 @@
+// components/home/FeaturesSection.tsx
 import { CheckCircle } from 'lucide-react'
 
 const features = [
@@ -24,4 +25,4 @@ export default function FeaturesSection() {
       </div>
     </section>
   )
-} 
+}
