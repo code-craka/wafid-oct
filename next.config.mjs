@@ -5,7 +5,7 @@ const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
 const config = {
-  // your other next.js config
+  // Other Next.js config options
 };
 
 export default withNextIntl(config);

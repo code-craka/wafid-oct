@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "[code-craka/wafid-oct source archive]",
+			"uri": "codeql-zip-archive://0-163/Users/rihan/Library/Application Support/Cursor/User/workspaceStorage/9959e5a15da18d279ad22735a246f11f/GitHub.vscode-codeql/code-craka-wafid-oct/javascript/src.zip"
+		}
+	],
+	"settings": {
+		"sarif-viewer.connectToGithubCodeScanning": "off"
+	}
+}
